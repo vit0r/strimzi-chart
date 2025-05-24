@@ -57,7 +57,7 @@ spec:
         configuration:
           class: nginx
           bootstrap:
-            host: "kafka.bootstrap.{{ $dns }}"
+            host: "kafka-bootstrap.{{ $dns }}"
           brokers:
           - broker: 0
             host: "kafka-0.{{ $dns }}"
@@ -65,6 +65,23 @@ spec:
             host: "kafka-1.{{ $dns }}"
           - broker: 2
             host: "kafka-2.{{ $dns }}"
+      - name: exttls
+        port: 9096
+        type: ingress
+        tls: true
+        authentication:
+          type: tls
+        configuration:
+          class: nginx
+          bootstrap:
+            host: "kafka-bootstrap-tls.{{ $dns }}"
+          brokers:
+          - broker: 0
+            host: "kafka-tls-0.{{ $dns }}"
+          - broker: 1
+            host: "kafka-tls-1.{{ $dns }}"
+          - broker: 2
+            host: "kafka-tls-2.{{ $dns }}"
     config:
       num.partitions: 3
       default.replication.factor: 3
