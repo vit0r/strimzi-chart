@@ -57,14 +57,14 @@ spec:
         configuration:
           class: nginx
           bootstrap:
-            host: kafka.bootstrap.{{$dns}}
+            host: "kafka.bootstrap.{{ $dns }}"
           brokers:
           - broker: 0
-            host: kafka-0.{{$dns}}
+            host: "kafka-0.{{ $dns }}"
           - broker: 1
-            host: kafka-1.{{$dns}}
+            host: "kafka-1.{{ $dns }}"
           - broker: 2
-            host: kafka-2.{{$dns}}
+            host: "kafka-2.{{ $dns }}"
     config:
       num.partitions: 3
       default.replication.factor: 3
