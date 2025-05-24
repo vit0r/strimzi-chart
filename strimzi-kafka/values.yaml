@@ -1,4 +1,4 @@
-clusterName: weoss
+clusterName: dev
 dns: local
 broker:
   storage:
@@ -19,7 +19,7 @@ controller:
 topics:
   - name: test
 users:
-  - name: sys_costumer
+  - name: syscostumer
     spec:
       authentication:
         type: scram-sha-512
