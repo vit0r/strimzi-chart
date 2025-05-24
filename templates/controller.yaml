@@ -1,0 +1,24 @@
+{{ $clusterName := .Values.clusterName }}
+{{ $namespace := .Release.Namespace }}
+{{ $controller := default dict .Values.controller }}
+{{ $replicas := default dict $controller.replicas }}
+{{ $storage := default dict $controller.storage }}
+{{ $storageType := default dict $storage.type }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: kafka-controller
+  namespace: "{{ $namespace }}"
+  labels:
+    strimzi.io/cluster: "{{ $clusterName }}"
+spec:
+  replicas: {{ $replicas | default 1 }}
+  roles:
+    - controller
+  storage:
+    type: {{ $storageType | default "jbod" }} 
+    volumes:
+    {{- with  $storage.volumes }}
+      {{- toYaml . | nindent 8 }}
+    {{- end}}

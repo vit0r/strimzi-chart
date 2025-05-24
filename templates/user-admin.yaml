@@ -1,0 +1,13 @@
+{{ $clusterName := .Values.clusterName }}
+{{ $namespace := .Release.Namespace }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: admin
+  namespace: "{{ $namespace }}"
+  labels:
+    strimzi.io/cluster: "{{ $clusterName }}"
+spec:
+  authentication:
+    type: scram-sha-512

@@ -1,0 +1,26 @@
+{{ $clusterName := .Values.clusterName }}
+{{ $namespace := .Release.Namespace }}
+{{- range $users := .Values.users }}
+{{ $spec := default dict $users.spec }}
+{{ $authentication := default dict $spec.authentication }}
+{{ $authenticationType := default dict $authentication.type }}
+{{ $authorization := default dict $spec.authorization }}
+{{ $authorizationType := default dict $authorization.type }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  labels:
+    strimzi.io/cluster: {{ $clusterName }}
+  namespace: {{ $namespace }}
+  name: {{ $users.name }}
+spec:
+  authentication:
+    type: {{ $authenticationType | default "tls" }}
+  authorization:
+    type: simple
+    {{- with $authorization.acls }}
+    acls:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}

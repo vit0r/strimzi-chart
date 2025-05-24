@@ -1,0 +1,24 @@
+{{ $clusterName := .Values.clusterName }}
+{{ $namespace := .Release.Namespace }}
+{{ $broker := default dict .Values.broker }}
+{{ $replicas := default dict $broker.replicas }}
+{{ $storage := default dict $broker.storage }}
+{{ $storageType := default dict $storage.type }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: kafka-broker
+  namespace: "{{ $namespace }}"
+  labels:
+    strimzi.io/cluster: "{{ $clusterName }}"
+spec:
+  replicas: {{ $replicas | default 3 }}
+  roles:
+    - broker
+  storage:
+    type: {{ $storageType | default "jbod" }} 
+    volumes:
+    {{- with  $storage.volumes }}
+      {{- toYaml . | nindent 8 }}
+    {{- end}}

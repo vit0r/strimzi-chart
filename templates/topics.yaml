@@ -1,0 +1,30 @@
+{{ $clusterName := .Values.clusterName }}
+{{ $namespace := .Release.Namespace }}
+{{- range $topics := .Values.topics }}
+{{ $spec := default dict $topics.spec }}
+{{ $config := default dict $spec.config }}
+{{ $configRetention := default dict $config.retention }}
+{{ $retentionMs := default dict $configRetention.ms }}
+{{ $configMin := default dict $config.min }}
+{{ $configMinInsync := default dict $configMin.insync }}
+{{ $configMinInsyncRetention := default dict $configMinInsync.retention }}
+{{ $segment := default dict $config.segment }}
+{{ $segmentBytes := default dict $segment.bytes }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  labels:
+    strimzi.io/cluster: {{ $clusterName }}
+  name: {{ $topics.name }}
+  namespace: {{ $namespace }}
+spec:
+  config:
+    cleanup.policy: delete
+    retention.ms: {{ $retentionMs | default 604800000 }}
+    min.insync.replicas: {{ $configMinInsyncRetention | default 2 }}
+    segment.bytes: {{ $segmentBytes | default 1073741824 }} 
+  partitions: {{ $spec.partitions | default 3 }}
+  replicas: {{ $spec.replicas | default 3 }}
+  topicName: {{ $topics.name | replace "-" "." }}
+{{- end}}
