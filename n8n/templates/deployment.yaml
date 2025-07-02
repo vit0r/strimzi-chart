@@ -28,19 +28,19 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ include "n8n.fullname" . }}
+        - name: "{{ .Chart.Name }}"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           envFrom:
             - configMapRef:
-                name: {{ include "n8n.fullname" . }}
+                name: "{{ .Chart.Name }}"
             - secretRef:
-                name: {{ include "n8n.fullname" . }}
+                name: "{{ .Chart.Name }}"
           volumeMounts:
             - mountPath: /home/node/.n8n
-              name: {{ include "n8n.fullname" . }}
+              name: "{{ .Chart.Name }}"
           ports:
             - name: http
               containerPort: 5678
@@ -68,6 +68,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - name: {{ include "n8n.fullname" . }}
+        - name: "{{ .Chart.Name }}"
           persistentVolumeClaim:
-            claimName: {{ include "n8n.fullname" . }}
+            claimName: "{{ .Chart.Name }}"
