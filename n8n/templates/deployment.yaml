@@ -68,6 +68,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - name: "{{.Chart.Name}}"
+        - name: {{ include "n8n.fullname" . }}
           persistentVolumeClaim:
-            claimName: "{{.Chart.Name}}"
+            claimName: {{ include "n8n.fullname" . }}
